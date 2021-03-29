@@ -8,8 +8,6 @@ variable "region" {
   default = "europe-west1"
 }
 
-
-
 resource "google_service_account" "default" {
   account_id   = var.project
   display_name = "Service Account"
