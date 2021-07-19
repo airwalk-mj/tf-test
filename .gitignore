@@ -30,5 +30,6 @@ override.tf.json
 
 
 *credentials*
-gcp-credentials.json
+*gcp-credentials.json
 
+europe-west2/dev/single-cluster/gcp-credentials.json
