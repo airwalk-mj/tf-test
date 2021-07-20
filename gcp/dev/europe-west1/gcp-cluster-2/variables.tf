@@ -21,12 +21,12 @@ variable "region" {
 
 variable "network" {
   description = "The VPC network created to host the cluster in"
-  default     = "gke-network2"
+  default     = "network2"
 }
 
 variable "subnetwork" {
   description = "The subnetwork created to host the cluster in"
-  default     = "gke-subnet2"
+  default     = "subnet2"
 }
 
 variable "ip_range_pods_name" {
