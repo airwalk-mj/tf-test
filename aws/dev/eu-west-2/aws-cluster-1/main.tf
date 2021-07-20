@@ -5,7 +5,8 @@ terraform {
       source  = "hashicorp/aws"
     }
     kubernetes = {
-      source  = "hashicorp/aws"
+      source   = "hashicorp/kubernetes"
+      version  = "~> 2.3"
     }
     random    = {version = "~> 2.3"}
     local     = {version = "~> 1.4"}
@@ -19,11 +20,9 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  region                 = var.region
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
 }
 
 data "aws_eks_cluster" "cluster" {
@@ -58,7 +57,7 @@ resource "aws_security_group" "worker_group_mgmt_one" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "10.1.0.0/8",
+      "10.0.0.0/8",
     ]
   }
 }
@@ -73,7 +72,7 @@ resource "aws_security_group" "worker_group_mgmt_two" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "192.168.1.0/16",
+      "192.168.0.0/16",
     ]
   }
 }
@@ -88,19 +87,19 @@ resource "aws_security_group" "all_worker_mgmt" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "10.1.0.0/8",
-      "172.16.1.0/12",
-      "192.168.1.0/16",
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "192.168.0.0/16",
     ]
   }
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.6.0"
+  version = "~> 2.78"
 
   name                 = "vpc-aws-cluster-1"
-  cidr                 = "10.1.0.0/16"
+  cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
   public_subnets       = ["10.1.4.0/24", "10.1.5.0/24", "10.1.6.0/24"]
@@ -128,13 +127,6 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.19"
   subnets         = module.vpc.private_subnets
-
-  cluster_encryption_config = [
-    {
-      provider_key_arn = aws_kms_key.eks.arn        # arn:aws:kms:eu-west-2:544294979223:key/9f1bd709-ba1b-40ae-a04e-d3ff4850e88d
-      resources        = ["secrets"]
-    }
-  ]
 
   #tags = {
   #  GithubRepo  = "terraform-aws-eks"
