@@ -66,7 +66,7 @@ module "gke" {
       machine_type              = "e2-medium"
       node_locations            = "europe-west1-b,europe-west1-c,europe-west1-d"
       min_count                 = 1
-      max_count                 = 2
+      max_count                 = 1
       disk_size_gb              = 30
     },
   ]
