@@ -35,7 +35,7 @@ module "gcp-network" {
   subnets = [
     {
       subnet_name   = "${var.subnetwork}-${var.env_name}-${random.id.hex}"
-      subnet_ip     = "10.40.0.0/16"
+      subnet_ip     = "10.10.0.0/16"
       subnet_region = var.region
     },
   ]
@@ -44,11 +44,11 @@ module "gcp-network" {
     "${var.subnetwork}-${var.env_name}-${random.id.hex}" = [
       {
         range_name    = var.ip_range_pods_name
-        ip_cidr_range = "10.50.0.0/16"
+        ip_cidr_range = "10.20.0.0/16"
       },
       {
         range_name    = var.ip_range_services_name
-        ip_cidr_range = "10.60.0.0/16"
+        ip_cidr_range = "10.30.0.0/16"
       },
     ]
   }
