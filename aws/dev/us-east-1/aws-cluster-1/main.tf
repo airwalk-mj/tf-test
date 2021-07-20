@@ -1,34 +1,31 @@
+
 terraform {
-  required_version = ">= 0.12.0"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.4"
+    }
+    kubernetes = {
+      host                   = data.aws_eks_cluster.cluster.endpoint
+      cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+      token                  = data.aws_eks_cluster_auth.cluster.token
+      load_config_file       = false
+      version                = "~> 1.13"
+    }
+
+    random = {version = "~> 2.3"}
+    local = {version = "~> 1.4"}
+    null = {version = "~> 2.1"}
+    template = {version = "~> 2.1"}
+  }
 }
 
-provider "aws" {
-  version = "~> 3.4"
-  region  = var.region
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
 }
 
-provider "random" {
-  version = "~> 2.3"
-}
-
-provider "local" {
-  version = "~> 1.4"
-}
-
-provider "null" {
-  version = "~> 2.1"
-}
-
-provider "template" {
-  version = "~> 2.1"
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
-  version                = "~> 1.13"
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
 }
 
 data "aws_availability_zones" "available" {
