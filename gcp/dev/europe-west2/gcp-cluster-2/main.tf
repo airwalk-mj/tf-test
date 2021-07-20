@@ -28,8 +28,8 @@ module "gke" {
   name                   = "${var.cluster_name}-${var.env_name}"
   regional               = true
   region                 = var.region
-  network                = module.gcp-network.network_name
-  subnetwork             = module.gcp-network.subnets_names[0]
+  network                = "gke-network-dev"
+  subnetwork             = "gke-subnet-dev"
   ip_range_pods          = var.ip_range_pods_name
   ip_range_services      = var.ip_range_services_name
   node_pools = [
