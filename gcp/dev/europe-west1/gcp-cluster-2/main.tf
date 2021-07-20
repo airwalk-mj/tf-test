@@ -34,14 +34,14 @@ module "gcp-network" {
 
   subnets = [
     {
-      subnet_name   = "${var.subnetwork}-${var.env_name}-${random_id.id.hex}"
+      subnet_name   = "${var.subnetwork}-${var.env_name}"
       subnet_ip     = "10.40.0.0/16"
       subnet_region = var.region
     },
   ]
 
   secondary_ranges = {
-    "${var.subnetwork}-${var.env_name}-${random_id.id.hex}" = [
+    "${var.subnetwork}-${var.env_name}" = [
       {
         range_name    = var.ip_range_pods_name
         ip_cidr_range = "10.50.0.0/16"
