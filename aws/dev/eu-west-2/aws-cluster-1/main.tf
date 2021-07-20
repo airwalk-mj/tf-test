@@ -3,21 +3,27 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.4"
     }
     kubernetes = {
-      host                   = data.aws_eks_cluster.cluster.endpoint
-      cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-      token                  = data.aws_eks_cluster_auth.cluster.token
-      load_config_file       = false
-      version                = "~> 1.13"
+      source  = "hashicorp/aws"
     }
-
-    random = {version = "~> 2.3"}
-    local = {version = "~> 1.4"}
-    null = {version = "~> 2.1"}
-    template = {version = "~> 2.1"}
+    random    = {version = "~> 2.3"}
+    local     = {version = "~> 1.4"}
+    null      = {version = "~> 2.1"}
+    template  = {version = "~> 2.2"}
   }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+provider "kubernetes" {
+  region                 = var.region
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+  load_config_file       = false
 }
 
 data "aws_eks_cluster" "cluster" {
@@ -115,14 +121,6 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb"             = "1"
   }
-}
-
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
 }
 
 module "eks" {
