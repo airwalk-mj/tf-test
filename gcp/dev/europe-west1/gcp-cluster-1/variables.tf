@@ -31,10 +31,10 @@ variable "subnetwork" {
 
 variable "ip_range_pods_name" {
   description = "The secondary ip range to use for pods"
-  default     = "ip-range-pods1"
+  default     = "ip-range-pods-subnet1"
 }
 
 variable "ip_range_services_name" {
   description = "The secondary ip range to use for services"
-  default     = "ip-range-services1"
+  default     = "ip-range-services-subnet1"
 }
